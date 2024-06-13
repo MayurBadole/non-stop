@@ -1,0 +1,27 @@
+.home-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-section,
+.right-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.left-section {
+  border-right: 1px solid #ccc;
+}
+
+.right-section {
+  padding-left: 40px;
+}
+
+.left-section::-webkit-scrollbar {
+  display: none;
+}
+.right-section::-webkit-scrollbar {
+  display: none;
+}

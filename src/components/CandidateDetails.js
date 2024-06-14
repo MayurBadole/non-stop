@@ -1,15 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CandidateContext } from "../context/CandidateContext";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/CandidateDetails.css";
 import ConfirmationModal from "./ConfirmationModal";
+import { getCandidateById } from "../services/candidateService";
 
 const CandidateDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const { selectedCandidate, removeCandidate } = useContext(CandidateContext);
   const [showModal, setShowModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { selectedCandidate, setSelectedCandidate, removeCandidate } =
+    useContext(CandidateContext);
+
+  useEffect(() => {
+    const fetchCandidate = async () => {
+      try {
+        const response = await getCandidateById(id);
+        setSelectedCandidate(response.data);
+      } catch (error) {
+        setErrorMessage("Failed to fetch candidate details , Please try again");
+      }
+    };
+
+    fetchCandidate();
+    // eslint-disable-next-line
+  }, [id]);
 
   const handleDelete = async () => {
     await removeCandidate(id);
@@ -78,7 +94,7 @@ const CandidateDetails = () => {
           />
         </>
       ) : (
-        <p>No candidate selected</p>
+        <div className="error-msg">{errorMessage}</div>
       )}
     </div>
   );

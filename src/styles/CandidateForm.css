@@ -1,4 +1,4 @@
-
+/* 
 .candidate-form {
     max-width: 800px;
     margin: 0 auto;
@@ -91,4 +91,133 @@
   .candidate-form .add-button:hover {
     background-color: #e6f0ff;
   }
-  
+   */
+
+.candidate-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.candidate-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.candidate-form label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.candidate-form input,
+.candidate-form select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.candidate-form button {
+  padding: 0.75rem 1.5rem;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.candidate-form button:hover {
+  background-color: #0056b3;
+}
+
+.candidate-form img {
+  max-width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+}
+
+.candidate-form h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.candidate-form .array-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.candidate-form .array-item label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.candidate-form .add-button {
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  background-color: white;
+  color: #007bff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.candidate-form .add-button:hover {
+  background-color: #e6f0ff;
+}
+
+.candidate-form {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 10px;
+}
+
+.candidate-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.candidate-form label {
+  margin: 10px 0;
+}
+
+.candidate-form .navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.candidate-form button {
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.candidate-form button[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+}

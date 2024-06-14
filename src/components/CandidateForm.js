@@ -1,15 +1,40 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CandidateContext } from "../context/CandidateContext";
+import Step1 from "../stepComponents/Step1";
+import Step2 from "../stepComponents/Step2";
+import Step3 from "../stepComponents/Step3";
+import Step4 from "../stepComponents/Step4";
+import CustomStepper from "../stepComponents/CustomStepper";
 
 import "../styles/CandidateForm.css";
+import { getCandidateById } from "../services/candidateService";
 
 const CandidateForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addCandidate, editCandidate, selectedCandidate } =
-    useContext(CandidateContext);
-  const [candidate, setCandidate] = useState({
+  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    addCandidate,
+    editCandidate,
+    selectedCandidate,
+    setSelectedCandidate,
+  } = useContext(CandidateContext);
+  useEffect(() => {
+    const fetchCandidate = async () => {
+      try {
+        const response = await getCandidateById(id);
+        setSelectedCandidate(response.data);
+      } catch (error) {
+        setErrorMessage("Failed to fetch candidate details , Please try again");
+      }
+    };
+    if (id) {
+      fetchCandidate();
+    }
+    // eslint-disable-next-line
+  }, [id]);
+  const initialCandidateState = {
     profile_picture: "",
     name: "",
     address: "",
@@ -17,25 +42,36 @@ const CandidateForm = () => {
     email: "",
     gender: "",
     hobbies: [],
-    education: [],
-    skills: [],
-    experience: [],
-  });
+    education: [
+      { institute: "", degree: "", percentage: "", pass_out_year: "" },
+    ],
+    skills: [{ name: "", experience: "" }],
+    experience: [
+      {
+        company: "",
+        project: "",
+        role: "",
+        team_size: "",
+        duration_from: "",
+        duration_to: "",
+      },
+    ],
+  };
+
+  const [candidate, setCandidate] = useState(initialCandidateState);
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    if (selectedCandidate) {
+    if (!id) {
+      setCandidate(initialCandidateState);
+    } else if (selectedCandidate) {
       setCandidate(selectedCandidate);
-    }
-  }, [selectedCandidate]);
+    } // eslint-disable-next-line
+  }, [id, selectedCandidate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCandidate({ ...candidate, [name]: value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setCandidate({ ...candidate, profile_picture: file });
   };
 
   const handleArrayChange = (e, index, field, arrayName) => {
@@ -55,276 +91,64 @@ const CandidateForm = () => {
     navigate("/home");
   };
 
-  const addEducation = () => {
-    setCandidate({
-      ...candidate,
-      education: [
-        ...candidate.education,
-        { institute: "", degree: "", percentage: "", pass_out_year: "" },
-      ],
-    });
+  const nextStep = () => {
+    setCurrentStep(currentStep + 1);
   };
 
-  const addSkill = () => {
-    setCandidate({
-      ...candidate,
-      skills: [...candidate.skills, { name: "", experience: "" }],
-    });
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
   };
 
-  const addExperience = () => {
-    setCandidate({
-      ...candidate,
-      experience: [
-        ...candidate.experience,
-        {
-          company: "",
-          project: "",
-          role: "",
-          team_size: "",
-          duration_from: "",
-          duration_to: "",
-        },
-      ],
-    });
+  const goToStep = (step) => {
+    setCurrentStep(step);
   };
 
-  const removeEducation = (index) => {
-    const newArray = candidate.education.filter((_, i) => i !== index);
-    setCandidate({ ...candidate, education: newArray });
-  };
+  const steps = [
+    <Step1
+      candidate={candidate}
+      handleChange={handleChange}
+      setCandidate={setCandidate}
+    />,
+    <Step2
+      setCandidate={setCandidate}
+      candidate={candidate}
+      handleArrayChange={handleArrayChange}
+    />,
+    <Step3
+      setCandidate={setCandidate}
+      candidate={candidate}
+      handleArrayChange={handleArrayChange}
+    />,
+    <Step4
+      setCandidate={setCandidate}
+      candidate={candidate}
+      handleArrayChange={handleArrayChange}
+    />,
+  ];
 
-  const removeSkill = (index) => {
-    const newArray = candidate.skills.filter((_, i) => i !== index);
-    setCandidate({ ...candidate, skills: newArray });
-  };
-
-  const removeExperience = (index) => {
-    const newArray = candidate.experience.filter((_, i) => i !== index);
-    setCandidate({ ...candidate, experience: newArray });
-  };
-
-  return (
+  return selectedCandidate ? (
     <div className="candidate-form">
       <h2>{id ? "Edit Candidate" : "Add Candidate"}</h2>
+      <CustomStepper currentStep={currentStep} goToStep={goToStep} />
       <form onSubmit={handleSubmit}>
-        <label>
-          Profile Picture:
-          <input type="file" onChange={handleFileChange} />
-        </label>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={candidate.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Address:
-          <input
-            type="text"
-            name="address"
-            value={candidate.address}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Phone:
-          <input
-            type="text"
-            name="phone"
-            value={candidate.phone}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={candidate.email}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Gender:
-          <select
-            name="gender"
-            value={candidate.gender}
-            onChange={handleChange}
-          >
-            <option value="">Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
-        <label>
-          Hobbies:
-          <input
-            type="text"
-            name="hobbies"
-            value={candidate.hobbies.join(",")}
-            onChange={(e) =>
-              setCandidate({ ...candidate, hobbies: e.target.value.split(",") })
-            }
-          />
-        </label>
-        <h3>Education</h3>
-        {candidate.education.map((edu, index) => (
-          <div key={index}>
-            <label>
-              Institute:
-              <input
-                type="text"
-                value={edu.institute}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "institute", "education")
-                }
-              />
-            </label>
-            <label>
-              Degree:
-              <input
-                type="text"
-                value={edu.degree}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "degree", "education")
-                }
-              />
-            </label>
-            <label>
-              Percentage:
-              <input
-                type="number"
-                value={edu.percentage}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "percentage", "education")
-                }
-              />
-            </label>
-            <label>
-              Pass Out Year:
-              <input
-                type="number"
-                value={edu.pass_out_year}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "pass_out_year", "education")
-                }
-              />
-            </label>
-            <button type="button" onClick={() => removeEducation(index)}>
-              Remove Education
+        {steps[currentStep - 1]}
+        <div className="navigation-buttons">
+          {currentStep > 1 && (
+            <button type="button" onClick={prevStep}>
+              Back
             </button>
-          </div>
-        ))}
-        <button type="button" onClick={addEducation}>
-          Add Education
-        </button>
-        <h3>Skills</h3>
-        {candidate.skills.map((skill, index) => (
-          <div key={index}>
-            <label>
-              Skill Name:
-              <input
-                type="text"
-                value={skill.name}
-                onChange={(e) => handleArrayChange(e, index, "name", "skills")}
-              />
-            </label>
-            <label>
-              Experience (years):
-              <input
-                type="number"
-                value={skill.experience}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "experience", "skills")
-                }
-              />
-            </label>
-            <button type="button" onClick={() => removeSkill(index)}>
-              Remove Skill
+          )}
+          {currentStep < steps.length && (
+            <button type="button" onClick={nextStep}>
+              Next
             </button>
-          </div>
-        ))}
-        <button type="button" onClick={addSkill}>
-          Add Skill
-        </button>
-        <h3>Experience</h3>
-        {candidate.experience.map((exp, index) => (
-          <div key={index}>
-            <label>
-              Company:
-              <input
-                type="text"
-                value={exp.company}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "company", "experience")
-                }
-              />
-            </label>
-            <label>
-              Project:
-              <input
-                type="text"
-                value={exp.project}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "project", "experience")
-                }
-              />
-            </label>
-            <label>
-              Role:
-              <input
-                type="text"
-                value={exp.role}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "role", "experience")
-                }
-              />
-            </label>
-            <label>
-              Team Size:
-              <input
-                type="number"
-                value={exp.team_size}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "team_size", "experience")
-                }
-              />
-            </label>
-            <label>
-              Duration From:
-              <input
-                type="text"
-                value={exp.duration_from}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "duration_from", "experience")
-                }
-              />
-            </label>
-            <label>
-              Duration To:
-              <input
-                type="text"
-                value={exp.duration_to}
-                onChange={(e) =>
-                  handleArrayChange(e, index, "duration_to", "experience")
-                }
-              />
-            </label>
-            <button type="button" onClick={() => removeExperience(index)}>
-              Remove Experience
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={addExperience}>
-          Add Experience
-        </button>
-        <button type="submit">Save</button>
+          )}
+          {currentStep === steps.length && <button type="submit">Save</button>}
+        </div>
       </form>
     </div>
+  ) : (
+    <div className="error-msg">{errorMessage}</div>
   );
 };
 

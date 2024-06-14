@@ -1,0 +1,45 @@
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.step-title {
+  font-size: 14px;
+  text-align: center;
+}
+
+.step.active .step-number {
+  background: #007bff;
+  color: white;
+}
+
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 30%;
+  left: calc(100% + 10px);
+  width: 120px;
+  height: 1px;
+  background-color: #ccc;
+  transform: translateY(-50%);
+}

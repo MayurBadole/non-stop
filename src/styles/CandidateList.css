@@ -53,12 +53,15 @@ ul {
   display: inline-block;
   margin: 10px 0;
   padding: 10px 20px;
-   color: black;
-  text-decoration: none;
+  color: black;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-/* .candidate-list a:hover {
-  background-color: #0056b3;
-} */
+.add-candidate {
+  text-decoration: none;
+  border: 1px solid gray;
+  padding: 10px;
+  display: flex;
+  justify-content: flex;
+}

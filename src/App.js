@@ -23,9 +23,10 @@ const App = () => {
             <Route path="candidate/new" element={<CandidateForm />} />
             <Route path="candidate/edit/:id" element={<CandidateForm />} />
             <Route path="candidate/:id" element={<CandidateDetails />} />
+            <Route path="*" element={<>Page Not Found</>} />
           </Route>
 
-          <Route path="*" element={<>error</>} />
+          <Route path="*" element={<>Page Not Found</>} />
         </Routes>
       </CandidateProvider>
     </Router>

@@ -104,29 +104,13 @@ const CandidateForm = () => {
   };
 
   const steps = [
-    <Step1
-      candidate={candidate}
-      handleChange={handleChange}
-      setCandidate={setCandidate}
-    />,
-    <Step2
-      setCandidate={setCandidate}
-      candidate={candidate}
-      handleArrayChange={handleArrayChange}
-    />,
-    <Step3
-      setCandidate={setCandidate}
-      candidate={candidate}
-      handleArrayChange={handleArrayChange}
-    />,
-    <Step4
-      setCandidate={setCandidate}
-      candidate={candidate}
-      handleArrayChange={handleArrayChange}
-    />,
+    <Step1 candidate={candidate} handleChange={handleChange} />,
+    <Step2 candidate={candidate} handleArrayChange={handleArrayChange} />,
+    <Step3 candidate={candidate} handleArrayChange={handleArrayChange} />,
+    <Step4 candidate={candidate} handleArrayChange={handleArrayChange} />,
   ];
 
-  return selectedCandidate ? (
+  return !errorMessage ? (
     <div className="candidate-form">
       <h2>{id ? "Edit Candidate" : "Add Candidate"}</h2>
       <CustomStepper currentStep={currentStep} goToStep={goToStep} />

@@ -7,7 +7,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLoginSuccess = (response) => {
-    // handle user data and token here
     navigate("/home");
   };
 

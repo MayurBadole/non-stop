@@ -9,6 +9,7 @@ const CandidateDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { selectedCandidate, setSelectedCandidate, removeCandidate } =
     useContext(CandidateContext);
@@ -18,8 +19,10 @@ const CandidateDetails = () => {
       try {
         const response = await getCandidateById(id);
         setSelectedCandidate(response.data);
+        setLoading(false);
       } catch (error) {
         setErrorMessage("Failed to fetch candidate details , Please try again");
+        setLoading(false);
       }
     };
 
@@ -35,6 +38,14 @@ const CandidateDetails = () => {
   const handleEdit = () => {
     navigate(`/home/candidate/edit/${selectedCandidate.id}`);
   };
+
+  if (loading) {
+    return (
+      <div className="loading-contianer">
+        <div className="loader"></div>
+      </div>
+    );
+  }
   return (
     <div className="candidate-details">
       {selectedCandidate ? (
@@ -94,7 +105,9 @@ const CandidateDetails = () => {
           />
         </>
       ) : (
-        <div className="error-msg">{errorMessage}</div>
+        <div className="loading-contianer">
+          <div className="error-msg">{errorMessage}</div>
+        </div>
       )}
     </div>
   );

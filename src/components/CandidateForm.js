@@ -20,20 +20,21 @@ const CandidateForm = () => {
     selectedCandidate,
     setSelectedCandidate,
   } = useContext(CandidateContext);
+
   useEffect(() => {
     const fetchCandidate = async () => {
       try {
-        const response = await getCandidateById(id);
-        setSelectedCandidate(response.data);
+        if (id) {
+          const response = await getCandidateById(id);
+          setSelectedCandidate(response.data);
+        }
       } catch (error) {
-        setErrorMessage("Failed to fetch candidate details , Please try again");
+        setErrorMessage("Failed to fetch candidate details. Please try again.");
       }
     };
-    if (id) {
-      fetchCandidate();
-    }
-    // eslint-disable-next-line
-  }, [id]);
+    fetchCandidate();
+  }, [id, setSelectedCandidate]);
+
   const initialCandidateState = {
     profile_picture: "",
     name: "",
@@ -62,11 +63,12 @@ const CandidateForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    if (!id) {
-      setCandidate(initialCandidateState);
-    } else if (selectedCandidate) {
+    if (id && selectedCandidate) {
       setCandidate(selectedCandidate);
-    } // eslint-disable-next-line
+    } else {
+      setCandidate(initialCandidateState);
+    }
+    // eslint-disable-next-line
   }, [id, selectedCandidate]);
 
   const handleChange = (e) => {
@@ -88,20 +90,13 @@ const CandidateForm = () => {
     } else {
       await addCandidate(candidate);
     }
+    alert("submited data")
     navigate("/home");
   };
 
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
-  const goToStep = (step) => {
-    setCurrentStep(step);
-  };
+  const nextStep = () => setCurrentStep((prevStep) => prevStep + 1);
+  const prevStep = () => setCurrentStep((prevStep) => prevStep - 1);
+  const goToStep = (step) => setCurrentStep(step);
 
   const steps = [
     <Step1 candidate={candidate} handleChange={handleChange} />,

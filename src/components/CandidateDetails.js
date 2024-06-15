@@ -19,20 +19,24 @@ const CandidateDetails = () => {
       try {
         const response = await getCandidateById(id);
         setSelectedCandidate(response.data);
-        setLoading(false);
       } catch (error) {
-        setErrorMessage("Failed to fetch candidate details , Please try again");
+        setErrorMessage("Failed to fetch candidate details. Please try again.");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchCandidate();
-    // eslint-disable-next-line
-  }, [id]);
+  }, [id, setSelectedCandidate]);
 
   const handleDelete = async () => {
-    await removeCandidate(id);
-    navigate("/home");
+    try {
+      await removeCandidate(id);
+      alert("Candidate data deleted successfully.");
+      navigate("/home");
+    } catch (error) {
+      alert("Failed to delete candidate data. Please try again.");
+    }
   };
 
   const handleEdit = () => {
@@ -46,6 +50,7 @@ const CandidateDetails = () => {
       </div>
     );
   }
+
   return (
     <div className="candidate-details">
       {selectedCandidate ? (
